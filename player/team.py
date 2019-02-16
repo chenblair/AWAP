@@ -42,18 +42,18 @@ class Team(object):
   def exp_dist(self,srcpos,dest,visible_board):
     pass
 
-  def closest(srcpos,company): pass
+  def closest(self,srcpos,company): pass
 
   def step(self, visible_board, states, score):
     pdb.set_trace()
     dirs = []
-    for p in range(4):
+    for p in states:
       pr = p.x
       pc = p.y
       # update the expected distance to each company based on FOV and state
       company_closest_tile = {
         company:
-        Team.closest((pr,pc),company) 
+        self.closest((pr,pc),company) 
         for company in self.company_base_value
       }
       
@@ -78,6 +78,7 @@ class Team(object):
       dc = desttile[1] - pc
       dir2add = None
       # if dr>0 and dc >0: dir2add = Direction.
+
 
 
     return [Direction.UP,Direction.NONE,Direction.NONE,Direction.NONE]
