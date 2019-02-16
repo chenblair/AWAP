@@ -12,29 +12,72 @@ andrewid4
 """
 from awap2019 import Tile, Direction, State
 
+import pdb
+
+import numpy as np
+
 class Team(object):
-    def __init__(self, initial_board, team_size, company_info):
-        """
-        The initializer is for you to precompute anything from the
-        initial board and the company information! Feel free to create any
-        new instance variables to help you out.
+  def __init__(self, initial_board, team_size, company_info):
+    self.board = np.array(initial_board)
 
-        Specific information about initial_board and company_info are
-        on the wiki. team_size, although passed to you as a parameter, will
-        always be 4.
-        """
-        self.board = initial_board
-        self.team_size = team_size
-        self.company_info = company_info
+    self.team_size = team_size # will always be 4
+    self.company_base_value = company_info # company value decreases by half everytime we visit
+                                           # helper gets half the advertised value
+    self.team_name = "sudoers"
 
-        self.team_name = # Add your team name here!
+    numrows,numcols = self.board.shape
+    self.company_booths = {
+      company: 
+        [(r,c) for r in range(numrows) for c in range(numcols) if self.board[(r,c)].get_booth()==company]
+      for company in company_info
+    }
+    self.company_line_zones = {
+      company: 
+        [(r,c) for r in range(numrows) for c in range(numcols) if self.board[(r,c)].get_line()==company]
+      for company in company_info
+    }
 
-    def step(self, visible_board, states, score):
-        """
-        The step function should return a list of four Directions.
+    pdb.set_trace()
 
-        For more information on what visible_board, states, and score
-        are, please look on the wiki.
-        """
+  def exp_dist(self,srcpos,dest,visible_board):
+    pass
 
-        pass
+  def closest(srcpos,company): pass
+
+  def step(self, visible_board, states, score):
+    pdb.set_trace()
+    dirs = []
+    for p in range(4):
+      pr = p.x
+      pc = p.y
+      # update the expected distance to each company based on FOV and state
+      company_closest_tile = {
+        company:
+        Team.closest((pr,pc),company) 
+        for company in self.company_base_value
+      }
+      
+      company_exp_dist = {
+        company:
+        self.exp_dist((pr,pc),company_closest_tile[company],visible_board)
+        for company in self.company_base_value
+      }
+
+      bestvalue = 0
+      bestcomp = None
+      for comp in company_exp_dist:
+        v = self.company_base_value[comp]/company_exp_dist[comp] 
+        if v>bestvalue:
+          bestvalue = v
+          bestcomp = comp
+        
+      # assign p to go toward bestcomp
+      self.company_base_value[bestcomp] /= 2
+      desttile = company_closest_tile[bestcomp]
+      dr = desttile[0] - pr
+      dc = desttile[1] - pc
+      dir2add = None
+      # if dr>0 and dc >0: dir2add = Direction.
+
+
+    return [Direction.UP,Direction.NONE,Direction.NONE,Direction.NONE]
